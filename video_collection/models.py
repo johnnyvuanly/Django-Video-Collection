@@ -7,4 +7,6 @@ class Video(models.Model):
     notes = models.TextField(blank=True, null=True) # Allow null values in the database
 
 def __str__(self):
+    # String displayed in the admin console, or when printing a model object
+    # You can return any useful string here
     return f'ID: {self.pk}, Name: {self.name}, URL: {self.url}, Notes: {self.notes[:200]}' # first 200 characters shown in notes
