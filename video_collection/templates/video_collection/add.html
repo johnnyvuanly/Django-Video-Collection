@@ -9,7 +9,7 @@
 {% endfor %}
 
 <!-- Posting is asking the server to make changes/updates to the database -->
-<form methods="POST" action="{% url 'add_video' %}">
+<form method="POST" action="{% url 'add_video' %}">
     <!-- Since this is a post request add CRSF token -->
     {% csrf_token %}
     {{ new_video_form }}
