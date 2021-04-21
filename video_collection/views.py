@@ -1,5 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.core.exceptions import ValidationError
+from django.db import IntegrityError
 from .forms import VideoForm
 from .models import Video # Video model describes the structure of the database and it describes the structure of the object in your code
 
@@ -14,12 +16,18 @@ def add(request):
         # Equal to video form the class created from the data that was sent to the server 
         new_video_form = VideoForm(request.POST)
         if new_video_form.is_valid():
-            new_video_form.save()
-            messages.info(request, 'New video saved!')
+            try:
+                new_video_form.save()
+                return redirect('video_list')
+                # messages.info(request, 'New video saved!')
             # TODO show success message or redirect to list of videos
-        else:
-            messages.warning(request, 'Please check the data entered')
-            return render(request, 'video_collection/add.html', {'new_video_form': new_video_form})
+            except ValidationError:
+                messages.warning(request, 'Invalid YouTube URL')
+            except IntegrityError: # Caused by a duplicate video
+                messages.warning(request, 'You already added that video')
+        
+        messages.warning(request, 'Please check the data entered')
+        return render(request, 'video_collection/add.html', {'new_video_form': new_video_form})
 
     new_video_form = VideoForm()
     return render(request, 'video_collection/add.html', {'new_video_form': new_video_form})
