@@ -3,6 +3,22 @@
 {% block content %}
 
 <h2>Video List</h2>
+
+<h3>Search Videos</h3>
+
+<form method="GET" action="{% url 'video_list' %}">
+    <!-- search form from views will be converted into HTML to display on the page -->
+    {{ search_form }} 
+    <button type="submit">Search</button>
+</form>
+
+<a href="{% url 'video_list' %}">
+    <button>Clear Search</button>
+</a>
+
+<!-- If length is one for video it won't display anything but if length is 0,2 or more it will display an s on videos -->
+<h3>{{ videos|length }} video{{ videos|length|pluralize }}</h3>
+
 <!-- videos is from the function video_list in views.py -->
 {% for video in videos %} 
 
@@ -13,6 +29,10 @@
         <p><a href="{{video.url}}">{{ video.url }}</a></p>
         <!-- There are two types HTML elements, one that displays in a stack vertically one after the other, and there's inline elements which will be on the same line at an a or anchor as an inline element -->
     </div>
+
+{% empty %}
+
+    <p>No videos</p>
 
 {% endfor %}
 
